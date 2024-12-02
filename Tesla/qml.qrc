@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>ui/BottomBar/BottomBar.qml</file>
+        <file>ui/RightScreen/RightScreen.qml</file>
+        <file>ui/LeftScreen/LeftScreen.qml</file>
+        <file>ui/assets/carRender.jpg</file>
+        <file>ui/assets/car.png</file>
+        <file>ui/assets/padlock.png</file>
+        <file>ui/assets/padlock-unlock.png</file>
+        <file>ui/RightScreen/NavigationSearchBox.qml</file>
+        <file>ui/assets/search.png</file>
+        <file>ui/WarningDialog/WarningDialog.qml</file>
+        <file>ui/assets/teslaInfoImage.png</file>
+        <file>ui/assets/full-battery.png</file>
+        <file>ui/assets/spotify.png</file>
+        <file>ui/assets/voice.png</file>
+        <file>ui/assets/bluetooth.png</file>
+        <file>ui/assets/call.png</file>
+        <file>ui/assets/gear.png</file>
+        <file>ui/assets/mapImage.png</file>
+    </qresource>
+</RCC>
