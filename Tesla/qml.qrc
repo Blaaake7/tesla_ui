@@ -19,5 +19,6 @@
         <file>ui/assets/call.png</file>
         <file>ui/assets/gear.png</file>
         <file>ui/assets/mapImage.png</file>
+        <file>ui/WarningDialog/CameraWarning.qml</file>
     </qresource>
 </RCC>

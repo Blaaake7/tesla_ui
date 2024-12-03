@@ -17,7 +17,7 @@ CXX           = g++
 DEFINES       = -DQT_NO_DEBUG -DQT_QUICK_LIB -DQT_GUI_LIB -DQT_QMLMODELS_LIB -DQT_QML_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -O2 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -I/usr/include/aarch64-linux-gnu/qt5 -I/usr/include/aarch64-linux-gnu/qt5/QtQuick -I/usr/include/aarch64-linux-gnu/qt5/QtGui -I/usr/include/aarch64-linux-gnu/qt5/QtQmlModels -I/usr/include/aarch64-linux-gnu/qt5/QtQml -I/usr/include/aarch64-linux-gnu/qt5/QtNetwork -I/usr/include/aarch64-linux-gnu/qt5/QtCore -I. -I/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++
+INCPATH       = -I. -I/usr/include/opencv4 -I/usr/include/aarch64-linux-gnu/qt5 -I/usr/include/aarch64-linux-gnu/qt5/QtQuick -I/usr/include/aarch64-linux-gnu/qt5/QtGui -I/usr/include/aarch64-linux-gnu/qt5/QtQmlModels -I/usr/include/aarch64-linux-gnu/qt5/QtQml -I/usr/include/aarch64-linux-gnu/qt5/QtNetwork -I/usr/include/aarch64-linux-gnu/qt5/QtCore -I. -I/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++
 QMAKE         = /usr/lib/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -37,10 +37,10 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = Tesla1.0.0
-DISTDIR = /root/Tesla/.tmp/Tesla1.0.0
+DISTDIR = /root/tesla_ui/Tesla/.tmp/Tesla1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1
-LIBS          = $(SUBLIBS) /usr/lib/aarch64-linux-gnu/libQt5Quick.so /usr/lib/aarch64-linux-gnu/libQt5Gui.so /usr/lib/aarch64-linux-gnu/libQt5QmlModels.so /usr/lib/aarch64-linux-gnu/libQt5Qml.so /usr/lib/aarch64-linux-gnu/libQt5Network.so /usr/lib/aarch64-linux-gnu/libQt5Core.so -lGL -lpthread   
+LIBS          = $(SUBLIBS) -lopencv_stitching -lopencv_alphamat -lopencv_aruco -lopencv_barcode -lopencv_bgsegm -lopencv_bioinspired -lopencv_ccalib -lopencv_dnn_objdetect -lopencv_dnn_superres -lopencv_dpm -lopencv_face -lopencv_freetype -lopencv_fuzzy -lopencv_hdf -lopencv_hfs -lopencv_img_hash -lopencv_intensity_transform -lopencv_line_descriptor -lopencv_mcc -lopencv_quality -lopencv_rapid -lopencv_reg -lopencv_rgbd -lopencv_saliency -lopencv_shape -lopencv_stereo -lopencv_structured_light -lopencv_phase_unwrapping -lopencv_superres -lopencv_optflow -lopencv_surface_matching -lopencv_tracking -lopencv_highgui -lopencv_datasets -lopencv_text -lopencv_plot -lopencv_ml -lopencv_videostab -lopencv_videoio -lopencv_viz -lopencv_wechat_qrcode -lopencv_ximgproc -lopencv_video -lopencv_xobjdetect -lopencv_objdetect -lopencv_calib3d -lopencv_imgcodecs -lopencv_features2d -lopencv_dnn -lopencv_flann -lopencv_xphoto -lopencv_photo -lopencv_imgproc -lopencv_core /usr/lib/aarch64-linux-gnu/libQt5Quick.so /usr/lib/aarch64-linux-gnu/libQt5Gui.so /usr/lib/aarch64-linux-gnu/libQt5QmlModels.so /usr/lib/aarch64-linux-gnu/libQt5Qml.so /usr/lib/aarch64-linux-gnu/libQt5Network.so /usr/lib/aarch64-linux-gnu/libQt5Core.so -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -52,9 +52,29 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = main.cpp qrc_qml.cpp
-OBJECTS       = main.o \
-		qrc_qml.o
+SOURCES       = Controllers/camerareceiveimage.cpp \
+		Controllers/dataprovider.cpp \
+		Controllers/system.cpp \
+		opencvimageprovider.cpp \
+		videostreamer.cpp \
+		main.cpp qrc_qml.cpp \
+		moc_camerareceiveimage.cpp \
+		moc_dataprovider.cpp \
+		moc_system.cpp \
+		moc_opencvimageprovider.cpp \
+		moc_videostreamer.cpp
+OBJECTS       = camerareceiveimage.o \
+		dataprovider.o \
+		system.o \
+		opencvimageprovider.o \
+		videostreamer.o \
+		main.o \
+		qrc_qml.o \
+		moc_camerareceiveimage.o \
+		moc_dataprovider.o \
+		moc_system.o \
+		moc_opencvimageprovider.o \
+		moc_videostreamer.o
 DIST          = /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -125,11 +145,13 @@ DIST          = /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/resolve_config.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/default_post.prf \
+		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/link_pkgconfig.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/warn_on.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qt.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/resources_functions.prf \
@@ -143,7 +165,16 @@ DIST          = /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		Tesla.pro  main.cpp
+		Tesla.pro Controllers/camerareceiveimage.h \
+		Controllers/dataprovider.h \
+		Controllers/system.h \
+		opencvimageprovider.h \
+		videostreamer.h Controllers/camerareceiveimage.cpp \
+		Controllers/dataprovider.cpp \
+		Controllers/system.cpp \
+		opencvimageprovider.cpp \
+		videostreamer.cpp \
+		main.cpp
 QMAKE_TARGET  = Tesla
 DESTDIR       = 
 TARGET        = Tesla
@@ -225,11 +256,13 @@ Makefile: Tesla.pro /usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf 
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/resolve_config.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/default_post.prf \
+		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/link_pkgconfig.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/warn_on.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qt.prf \
 		/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/resources_functions.prf \
@@ -316,11 +349,13 @@ Makefile: Tesla.pro /usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf 
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/resolve_config.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/default_post.prf:
+/usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/link_pkgconfig.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/warn_on.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/qt.prf:
 /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/resources_functions.prf:
@@ -352,7 +387,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents qml.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents Controllers/camerareceiveimage.h Controllers/dataprovider.h Controllers/system.h opencvimageprovider.h videostreamer.h $(DISTDIR)/
+	$(COPY_FILE) --parents Controllers/camerareceiveimage.cpp Controllers/dataprovider.cpp Controllers/system.cpp opencvimageprovider.cpp videostreamer.cpp main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -384,7 +420,22 @@ qrc_qml.cpp: qml.qrc \
 		main.qml \
 		ui/LeftScreen/LeftScreen.qml \
 		ui/BottomBar/BottomBar.qml \
-		ui/RightScreen/RightScreen.qml
+		ui/assets/full-battery.png \
+		ui/assets/spotify.png \
+		ui/assets/padlock.png \
+		ui/assets/mapImage.png \
+		ui/assets/padlock-unlock.png \
+		ui/assets/bluetooth.png \
+		ui/assets/voice.png \
+		ui/assets/search.png \
+		ui/assets/car.png \
+		ui/assets/carRender.jpg \
+		ui/assets/teslaInfoImage.png \
+		ui/assets/call.png \
+		ui/assets/gear.png \
+		ui/RightScreen/RightScreen.qml \
+		ui/RightScreen/NavigationSearchBox.qml \
+		ui/WarningDialog/WarningDialog.qml
 	/usr/lib/qt5/bin/rcc -name qml qml.qrc -o qrc_qml.cpp
 
 compiler_moc_predefs_make_all: moc_predefs.h
@@ -393,8 +444,34 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/aarch64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all:
+compiler_moc_header_make_all: moc_camerareceiveimage.cpp moc_dataprovider.cpp moc_system.cpp moc_opencvimageprovider.cpp moc_videostreamer.cpp
 compiler_moc_header_clean:
+	-$(DEL_FILE) moc_camerareceiveimage.cpp moc_dataprovider.cpp moc_system.cpp moc_opencvimageprovider.cpp moc_videostreamer.cpp
+moc_camerareceiveimage.cpp: Controllers/camerareceiveimage.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /root/tesla_ui/Tesla/moc_predefs.h -I/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++ -I/root/tesla_ui/Tesla -I/usr/include/opencv4 -I/usr/include/aarch64-linux-gnu/qt5 -I/usr/include/aarch64-linux-gnu/qt5/QtQuick -I/usr/include/aarch64-linux-gnu/qt5/QtGui -I/usr/include/aarch64-linux-gnu/qt5/QtQmlModels -I/usr/include/aarch64-linux-gnu/qt5/QtQml -I/usr/include/aarch64-linux-gnu/qt5/QtNetwork -I/usr/include/aarch64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/aarch64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/aarch64-linux-gnu/11/include -I/usr/local/include -I/usr/include/aarch64-linux-gnu -I/usr/include Controllers/camerareceiveimage.h -o moc_camerareceiveimage.cpp
+
+moc_dataprovider.cpp: Controllers/dataprovider.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /root/tesla_ui/Tesla/moc_predefs.h -I/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++ -I/root/tesla_ui/Tesla -I/usr/include/opencv4 -I/usr/include/aarch64-linux-gnu/qt5 -I/usr/include/aarch64-linux-gnu/qt5/QtQuick -I/usr/include/aarch64-linux-gnu/qt5/QtGui -I/usr/include/aarch64-linux-gnu/qt5/QtQmlModels -I/usr/include/aarch64-linux-gnu/qt5/QtQml -I/usr/include/aarch64-linux-gnu/qt5/QtNetwork -I/usr/include/aarch64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/aarch64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/aarch64-linux-gnu/11/include -I/usr/local/include -I/usr/include/aarch64-linux-gnu -I/usr/include Controllers/dataprovider.h -o moc_dataprovider.cpp
+
+moc_system.cpp: Controllers/system.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /root/tesla_ui/Tesla/moc_predefs.h -I/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++ -I/root/tesla_ui/Tesla -I/usr/include/opencv4 -I/usr/include/aarch64-linux-gnu/qt5 -I/usr/include/aarch64-linux-gnu/qt5/QtQuick -I/usr/include/aarch64-linux-gnu/qt5/QtGui -I/usr/include/aarch64-linux-gnu/qt5/QtQmlModels -I/usr/include/aarch64-linux-gnu/qt5/QtQml -I/usr/include/aarch64-linux-gnu/qt5/QtNetwork -I/usr/include/aarch64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/aarch64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/aarch64-linux-gnu/11/include -I/usr/local/include -I/usr/include/aarch64-linux-gnu -I/usr/include Controllers/system.h -o moc_system.cpp
+
+moc_opencvimageprovider.cpp: opencvimageprovider.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /root/tesla_ui/Tesla/moc_predefs.h -I/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++ -I/root/tesla_ui/Tesla -I/usr/include/opencv4 -I/usr/include/aarch64-linux-gnu/qt5 -I/usr/include/aarch64-linux-gnu/qt5/QtQuick -I/usr/include/aarch64-linux-gnu/qt5/QtGui -I/usr/include/aarch64-linux-gnu/qt5/QtQmlModels -I/usr/include/aarch64-linux-gnu/qt5/QtQml -I/usr/include/aarch64-linux-gnu/qt5/QtNetwork -I/usr/include/aarch64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/aarch64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/aarch64-linux-gnu/11/include -I/usr/local/include -I/usr/include/aarch64-linux-gnu -I/usr/include opencvimageprovider.h -o moc_opencvimageprovider.cpp
+
+moc_videostreamer.cpp: videostreamer.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /root/tesla_ui/Tesla/moc_predefs.h -I/usr/lib/aarch64-linux-gnu/qt5/mkspecs/linux-g++ -I/root/tesla_ui/Tesla -I/usr/include/opencv4 -I/usr/include/aarch64-linux-gnu/qt5 -I/usr/include/aarch64-linux-gnu/qt5/QtQuick -I/usr/include/aarch64-linux-gnu/qt5/QtGui -I/usr/include/aarch64-linux-gnu/qt5/QtQmlModels -I/usr/include/aarch64-linux-gnu/qt5/QtQml -I/usr/include/aarch64-linux-gnu/qt5/QtNetwork -I/usr/include/aarch64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/aarch64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/aarch64-linux-gnu/11/include -I/usr/local/include -I/usr/include/aarch64-linux-gnu -I/usr/include videostreamer.h -o moc_videostreamer.cpp
+
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
@@ -405,15 +482,47 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean 
+compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_header_clean 
 
 ####### Compile
 
-main.o: main.cpp 
+camerareceiveimage.o: Controllers/camerareceiveimage.cpp Controllers/camerareceiveimage.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o camerareceiveimage.o Controllers/camerareceiveimage.cpp
+
+dataprovider.o: Controllers/dataprovider.cpp Controllers/dataprovider.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dataprovider.o Controllers/dataprovider.cpp
+
+system.o: Controllers/system.cpp Controllers/system.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o system.o Controllers/system.cpp
+
+opencvimageprovider.o: opencvimageprovider.cpp opencvimageprovider.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o opencvimageprovider.o opencvimageprovider.cpp
+
+videostreamer.o: videostreamer.cpp videostreamer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o videostreamer.o videostreamer.cpp
+
+main.o: main.cpp Controllers/system.h \
+		Controllers/dataprovider.h \
+		Controllers/camerareceiveimage.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 qrc_qml.o: qrc_qml.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_qml.o qrc_qml.cpp
+
+moc_camerareceiveimage.o: moc_camerareceiveimage.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_camerareceiveimage.o moc_camerareceiveimage.cpp
+
+moc_dataprovider.o: moc_dataprovider.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_dataprovider.o moc_dataprovider.cpp
+
+moc_system.o: moc_system.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_system.o moc_system.cpp
+
+moc_opencvimageprovider.o: moc_opencvimageprovider.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_opencvimageprovider.o moc_opencvimageprovider.cpp
+
+moc_videostreamer.o: moc_videostreamer.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_videostreamer.o moc_videostreamer.cpp
 
 ####### Install
 

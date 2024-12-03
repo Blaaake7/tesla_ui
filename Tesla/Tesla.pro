@@ -4,11 +4,16 @@ QT += quick
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+CONFIG += link_pkgconfig
+PKGCONFIG += opencv4
+
 SOURCES += \
         Controllers/camerareceiveimage.cpp \
         Controllers/dataprovider.cpp \
         Controllers/system.cpp \
-        main.cpp
+        opencvimageprovider.cpp \
+        videostreamer.cpp \
+        main.cpp \
 
 RESOURCES += qml.qrc
 
@@ -26,4 +31,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     Controllers/camerareceiveimage.h \
     Controllers/dataprovider.h \
-    Controllers/system.h
+    Controllers/system.h \
+    opencvimageprovider.h \
+    videostreamer.h

@@ -38,24 +38,13 @@ Window {
     }
 
     Button {
-        text: "Received Image"
-        onClicked: cameraPopup.open()
+        id: cameraWarningButton
+        text: "Camera"
+        onClicked: cameraWarningDialog.open()
+        anchors.centerIn: parent
     }
 
-    Popup {
-        id: cameraPopup
-        width: 640
-        height: 480
-        modal: true
-        focus: true
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-
-        Image {
-            anchors.fill: parent
-            source: cameraReceiver.imageUrl
-            fillMode: Image.PreserveAspectFit
-            onStatusChanged: console.log("Image Url:", cameraReceiver.imageUrl)
-        }
+    CameraWarning{
+        id: cameraWarningDialog
     }
-
 }
