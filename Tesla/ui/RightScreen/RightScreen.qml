@@ -67,7 +67,7 @@ Rectangle{
         font.pixelSize: 13
         font.bold: true
         color: "black"
-        text: systemHandler.outdoorTemp + "°C"
+        text: dataProvider.zone1Temperature + " °C"
     }
 
     Text {

@@ -1,58 +1,38 @@
-#ifndef DATAPROVIDER_H
-#define DATAPROVIDER_H
-
 #include <QObject>
-#include <pthread.h>
+#include <QTimer>
 
-#define MAX_CLIENTS 10
-
-typedef struct {
-    int adc_value;
-    int pwm_duty_cycle;
-    int distance;
-    int led_state;
-} DataPacket;
-
-struct SharedMemory {
-    DataPacket client_data[MAX_CLIENTS];
-    int client_count;
-    pthread_mutex_t mutex;
-};
-
-class DataProvider : public QObject
-{
+class DataProvider : public QObject {
     Q_OBJECT
-    Q_PROPERTY(int clientId READ clientId WRITE setClientId NOTIFY clientIdChanged)
-    Q_PROPERTY(int adcValue READ adcValue NOTIFY dataChanged)
-    Q_PROPERTY(int pwmDutyCycle READ pwmDutyCycle NOTIFY dataChanged)
-    Q_PROPERTY(int distance READ distance NOTIFY dataChanged)
-    Q_PROPERTY(bool ledState READ ledState NOTIFY dataChanged)
+    Q_PROPERTY(float zone1Distance READ zone1Distance NOTIFY zone1DistanceChanged)
+    Q_PROPERTY(float zone1Temperature READ zone1Temperature NOTIFY zone1TemperatureChanged)
+    Q_PROPERTY(float zone2CO2 READ zone2CO2 NOTIFY zone2CO2Changed)
+    Q_PROPERTY(int sleepScore READ sleepScore NOTIFY sleepScoreChanged)
+    Q_PROPERTY(int doorStatus READ doorStatus NOTIFY doorStatusChanged)
 
 public:
     explicit DataProvider(QObject *parent = nullptr);
-    ~DataProvider();
 
-    int clientId() const;
-    void setClientId(int id);
-
-    int adcValue() const;
-    int pwmDutyCycle() const;
-    int distance() const;
-    bool ledState() const;
-
-    Q_INVOKABLE void updateData();
+    float zone1Distance() const { return m_zone1Distance; }
+    float zone1Temperature() const { return m_zone1Temperature; }
+    float zone2CO2() const { return m_zone2CO2; }
+    int sleepScore() const { return m_sleepScore; }
+    int doorStatus() const { return m_doorStatus; }
 
 signals:
-    void clientIdChanged();
-    void dataChanged();
+    void zone1DistanceChanged();
+    void zone1TemperatureChanged();
+    void zone2CO2Changed();
+    void sleepScoreChanged();
+    void doorStatusChanged();
+
+public slots:
+    void updateData();
 
 private:
-    int m_clientId;
-    DataPacket m_data;
-    SharedMemory *m_sharedMem;
-    int m_shm_fd;
-
-    void initSharedMemory();
+    QTimer *m_timer;
+    float m_zone1Distance;
+    float m_zone1Temperature;
+    float m_zone2CO2;
+    int m_sleepScore;
+    int m_doorStatus;
 };
-
-#endif // DATAPROVIDER_H

@@ -37,14 +37,57 @@ Window {
         id: warningDialog
     }
 
-    Button {
-        id: cameraWarningButton
-        text: "Camera"
-        onClicked: cameraWarningDialog.open()
-        anchors.centerIn: parent
+    Timer {
+        id: checkConditionsTimer
+        interval: 1000 // 1초 간격으로 조건 확인
+        repeat: true
+        running: true
+        property bool isCameraDialogVisible: false
+
+        onTriggered: {
+            // Camera Warning 조건 확인
+            if (dataProvider.doorStatus === 1 && dataProvider.zone1Distance <= 30) {
+                if (!isCameraDialogVisible) {
+                    isCameraDialogVisible = true;
+                    cameraWarningDialog.open();
+
+                    // 2초 후 CameraWarning 닫기
+                    Qt.callLater(function() {
+                        cameraWarningDialog.close();
+                        isCameraDialogVisible = false;
+                    }, 5000);
+                }
+            }
+            // Sleeping Driving Warning 조건 확인 (Camera Warning 조건과 충돌하지 않을 경우)
+            else if (dataProvider.sleepScore >= 90 && !isCameraDialogVisible) {
+                warningDialog.showDialog();
+            }
+        }
     }
 
     CameraWarning{
         id: cameraWarningDialog
+    }
+
+    Column {
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.margins: 15
+        spacing: 10
+
+        Text {
+            text: "Zone 1 Distance: " + dataProvider.zone1Distance.toFixed(2) + " cm"
+            font.pointSize: 11
+        }
+
+        Text {
+            text: "Zone 1 Temperature: " + dataProvider.zone1Temperature + " °C"
+            font.pointSize: 11
+        }
+
+        Text {
+            text: "Zone 2 CO2 Level: " + dataProvider.zone2CO2 + " ppm"
+            font.pointSize: 11
+        }
     }
 }

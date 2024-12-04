@@ -6,6 +6,10 @@
 #include <Controllers/camerareceiveimage.h>
 #include <opencvimageprovider.h>
 #include <videostreamer.h>
+#include "Controllers/sharedmemory.h"
+
+// 전역 변수 정의
+SharedMemory *shared_memory = nullptr;
 
 int main(int argc, char *argv[])
 {
@@ -13,6 +17,9 @@ int main(int argc, char *argv[])
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     #endif
     QGuiApplication app(argc, argv);
+
+    // 공유 메모리 초기화
+    initialize_shared_memory(&shared_memory);
 
     // 시스템 관련 객체
     System m_systemHandler;

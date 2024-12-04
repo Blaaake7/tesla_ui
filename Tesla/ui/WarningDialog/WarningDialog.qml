@@ -57,7 +57,7 @@ Dialog {
         running: false
         property int count: 0
         onTriggered: {
-            if (count % 2 == 0) {
+            if (count % 2 === 0) {
                 colorAnimation.from = "red"
                 colorAnimation.to = "orange"
             } else {
@@ -73,8 +73,17 @@ Dialog {
         }
     }
 
-    onOpened: {
+    Timer {
+        id: closeTimer
+        interval: 3000 // 3초 후 닫힘
+        repeat: false
+        onTriggered: warningDialog.close()
+    }
+
+    function showDialog() {
         blinkTimer.count = 0
         blinkTimer.start()
+        closeTimer.start()
+        warningDialog.open()
     }
 }

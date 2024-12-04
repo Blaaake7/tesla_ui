@@ -10,6 +10,7 @@ PKGCONFIG += opencv4
 SOURCES += \
         Controllers/camerareceiveimage.cpp \
         Controllers/dataprovider.cpp \
+    Controllers/sharedmemory.cpp \
         Controllers/system.cpp \
         opencvimageprovider.cpp \
         videostreamer.cpp \
@@ -31,6 +32,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     Controllers/camerareceiveimage.h \
     Controllers/dataprovider.h \
+    Controllers/sharedmemory.h \
     Controllers/system.h \
     opencvimageprovider.h \
     videostreamer.h

@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.13
 
 Dialog {
     id: cameraWarningDialog
-    title: "cameraWarning"
+    title: "Camera Warning"
     x: (parent.width - width) / 2
     y: (parent.height - height) / 2
     width: 800
@@ -21,40 +21,20 @@ Dialog {
     }
 
     ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 10
+
         Image {
             id: opencvImage
             anchors.fill: parent
             fillMode: Image.PreserveAspectFit
-            property bool counter: false
             visible: false
             source: "image://live/image"
             asynchronous: false
             cache: false
 
             function reload() {
-                counter = !counter
-                source = "image://live/image?id=" + counter
-            }
-        }
-
-        TextField {
-            id: videoPath
-            placeholderText: "Video Path or Video Index"
-            cursorVisible: true
-            width: startButton.width * 3
-            text: ""  // Reset text
-        }
-
-        Button {
-            id: startButton
-            text: "Open"
-            onClicked: {
-                if (videoPath.text !== "") {
-                    videoStreamer.openVideoCamera(videoPath.text)
-                    opencvImage.visible = true
-                } else {
-                    console.log("Please enter a valid video path or index.")
-                }
+                source = "image://live/image?id=" + Math.random();
             }
         }
 
@@ -71,5 +51,12 @@ Dialog {
                 opencvImage.reload()
             }
         }
+    }
+
+    onOpened: {
+        // 팝업이 열릴 때 카메라 연결
+        console.log("Opening camera connection...");
+        videoStreamer.openVideoCamera("/dev/video1");
+        opencvImage.visible = true;
     }
 }

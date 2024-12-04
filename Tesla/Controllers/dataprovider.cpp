@@ -1,88 +1,46 @@
 #include "dataprovider.h"
+#include "sharedmemory.h"
 #include <QDebug>
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <unistd.h>
 
+extern SharedMemory *shared_memory; // 서버 코드에서 공유 메모리 정의
+
 DataProvider::DataProvider(QObject *parent)
     : QObject(parent)
-    , m_clientId(0)
-    , m_sharedMem(nullptr)
-    , m_shm_fd(-1)
+    , m_zone1Distance(0)
+    , m_zone1Temperature(0)
+    , m_zone2CO2(0)
+    , m_sleepScore(0)
+    , m_doorStatus(0)
 {
-    initSharedMemory();
-}
-
-DataProvider::~DataProvider()
-{
-    if (m_sharedMem != nullptr) {
-        munmap(m_sharedMem, sizeof(SharedMemory));
-        ::close(m_shm_fd);
-    }
-}
-
-void DataProvider::initSharedMemory()
-{
-    m_shm_fd = shm_open("/shared_memory", O_RDWR, 0666);
-    if (m_shm_fd == -1) {
-        qDebug() << "Failed to open shared memory";
-        return;
-    }
-
-    m_sharedMem = static_cast<SharedMemory *>(mmap(nullptr, sizeof(SharedMemory), PROT_READ | PROT_WRITE, MAP_SHARED, m_shm_fd, 0));
-    if (m_sharedMem == MAP_FAILED) {
-        qDebug() << "Failed to map shared memory";
-        m_sharedMem = nullptr;
-        ::close(m_shm_fd);
-        return;
-    }
-    qDebug() << "Shared memory initialized successfully";
-}
-
-int DataProvider::clientId() const
-{
-    return m_clientId;
-}
-
-void DataProvider::setClientId(int id)
-{
-    if (m_clientId != id) {
-        m_clientId = id;
-        emit clientIdChanged();
-        updateData();
-    }
-}
-
-int DataProvider::adcValue() const
-{
-    return m_data.adc_value;
-}
-
-int DataProvider::pwmDutyCycle() const
-{
-    return m_data.pwm_duty_cycle;
-}
-
-int DataProvider::distance() const
-{
-    return m_data.distance;
-}
-
-bool DataProvider::ledState() const
-{
-    return m_data.led_state == 1;
+    m_timer = new QTimer(this);
+    connect(m_timer, &QTimer::timeout, this, &DataProvider::updateData);
+    m_timer->start(1000); // 1초마다 데이터 갱신
 }
 
 void DataProvider::updateData()
 {
-    if (m_sharedMem != nullptr) {
-        pthread_mutex_lock(&m_sharedMem->mutex);
-        if (m_clientId > 0 && m_clientId <= m_sharedMem->client_count && m_clientId <= MAX_CLIENTS) {
-            m_data = m_sharedMem->client_data[m_clientId - 1];
-            emit dataChanged();
-        }
-        pthread_mutex_unlock(&m_sharedMem->mutex);
+    if (shared_memory != nullptr) {
+        pthread_mutex_lock(&shared_memory->mutex); // 뮤텍스 잠금
+
+        // 공유 메모리에서 값 읽기
+        m_zone1Distance = shared_memory->zone1_recv.ultrasonic_distance;
+        m_zone1Temperature = shared_memory->zone1_recv.temperature;
+        m_zone2CO2 = shared_memory->zone2_recv.co2;
+        m_sleepScore = shared_memory->zone2_recv.sleep_score;
+        m_doorStatus = shared_memory->zone1_recv.door_status;
+
+        pthread_mutex_unlock(&shared_memory->mutex); // 뮤텍스 잠금 해제
+
+        // 값 변경 시 시그널 전송
+        emit zone1DistanceChanged();
+        emit zone1TemperatureChanged();
+        emit zone2CO2Changed();
+        emit sleepScoreChanged();
+        emit doorStatusChanged();
     } else {
-        qDebug() << "Shared memory not initialized";
+        qDebug() << "Shared memory not initialized.";
     }
 }
