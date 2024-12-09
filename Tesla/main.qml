@@ -26,15 +26,27 @@ Window {
         id: bottomBar
     }
 
-    Button {
-        id: warningButton
-        text: "Warning Button"
-        onClicked: warningDialog.open()
-        anchors.centerIn: parent
-    }
-
     WarningDialog {
         id: warningDialog
+    }
+
+    LeftCameraWarning {
+        id: leftCameraWarning
+    }
+
+    RightCameraWarning {
+        id: rightCameraWarning
+    }
+
+    Timer {
+        id: leftCameraTimer
+        interval: 5000 // 5초
+        repeat: false
+        onTriggered: {
+            leftCameraWarning.close();
+            checkConditionsTimer.isLeftCameraDialogVisible = false;
+            checkConditionsTimer.isLeftCameraTimerRunning = false;
+        }
     }
 
     Timer {
@@ -42,32 +54,24 @@ Window {
         interval: 1000 // 1초 간격으로 조건 확인
         repeat: true
         running: true
-        property bool isCameraDialogVisible: false
+        property bool isLeftCameraDialogVisible: false
+        property bool isLeftCameraTimerRunning: false
 
         onTriggered: {
-            // Camera Warning 조건 확인
-            if (dataProvider.doorStatus === 1 && dataProvider.zone1Distance <= 30) {
-                if (!isCameraDialogVisible) {
-                    isCameraDialogVisible = true;
-                    cameraWarningDialog.open();
+            let zone1Condition = dataProvider.doorStatus === 1 && dataProvider.zone1Distance <= 20;
 
-                    // 2초 후 CameraWarning 닫기
-                    Qt.callLater(function() {
-                        cameraWarningDialog.close();
-                        isCameraDialogVisible = false;
-                    }, 5000);
-                }
-            }
-            // Sleeping Driving Warning 조건 확인 (Camera Warning 조건과 충돌하지 않을 경우)
-            else if (dataProvider.sleepScore >= 90 && !isCameraDialogVisible) {
-                warningDialog.showDialog();
+            // Zone1 조건 확인 (Left Camera Warning)
+            if (zone1Condition && !isLeftCameraDialogVisible && !isLeftCameraTimerRunning) {
+                isLeftCameraDialogVisible = true;
+                isLeftCameraTimerRunning = true;
+                leftCameraWarning.open();
+
+                // 5초 후 LeftCameraWarning 닫기 (Timer 시작)
+                leftCameraTimer.start();
             }
         }
     }
 
-    CameraWarning{
-        id: cameraWarningDialog
-    }
 
     Column {
         anchors.left: parent.left
@@ -87,6 +91,11 @@ Window {
 
         Text {
             text: "Zone 2 CO2 Level: " + dataProvider.zone2CO2 + " ppm"
+            font.pointSize: 11
+        }
+
+        Text {
+            text: "Zone 3 Distance: " + dataProvider.zone3Distance.toFixed(2) + " cm"
             font.pointSize: 11
         }
     }

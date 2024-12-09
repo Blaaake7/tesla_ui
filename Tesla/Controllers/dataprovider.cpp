@@ -10,6 +10,7 @@ extern SharedMemory *shared_memory; // 서버 코드에서 공유 메모리 정�
 DataProvider::DataProvider(QObject *parent)
     : QObject(parent)
     , m_zone1Distance(0)
+    , m_zone3Distance(0)
     , m_zone1Temperature(0)
     , m_zone2CO2(0)
     , m_sleepScore(0)
@@ -27,6 +28,7 @@ void DataProvider::updateData()
 
         // 공유 메모리에서 값 읽기
         m_zone1Distance = shared_memory->zone1_recv.ultrasonic_distance;
+        m_zone3Distance = shared_memory->zone3_recv.ultrasonic_distance;
         m_zone1Temperature = shared_memory->zone1_recv.temperature;
         m_zone2CO2 = shared_memory->zone2_recv.co2;
         m_sleepScore = shared_memory->zone2_recv.sleep_score;
@@ -36,6 +38,7 @@ void DataProvider::updateData()
 
         // 값 변경 시 시그널 전송
         emit zone1DistanceChanged();
+        emit zone3DistanceChanged();
         emit zone1TemperatureChanged();
         emit zone2CO2Changed();
         emit sleepScoreChanged();

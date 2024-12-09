@@ -20,5 +20,7 @@
         <file>ui/assets/gear.png</file>
         <file>ui/assets/mapImage.png</file>
         <file>ui/WarningDialog/CameraWarning.qml</file>
+        <file>ui/WarningDialog/LeftCameraWarning.qml</file>
+        <file>ui/WarningDialog/RightCameraWarning.qml</file>
     </qresource>
 </RCC>

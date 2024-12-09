@@ -10,7 +10,7 @@ PKGCONFIG += opencv4
 SOURCES += \
         Controllers/camerareceiveimage.cpp \
         Controllers/dataprovider.cpp \
-    Controllers/sharedmemory.cpp \
+        Controllers/sharedmemory.cpp \
         Controllers/system.cpp \
         opencvimageprovider.cpp \
         videostreamer.cpp \
