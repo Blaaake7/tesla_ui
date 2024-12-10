@@ -56,9 +56,11 @@ Window {
         running: true
         property bool isLeftCameraDialogVisible: false
         property bool isLeftCameraTimerRunning: false
+        property bool isSleepingDialogVisible: false
 
         onTriggered: {
             let zone1Condition = dataProvider.doorStatus === 1 && dataProvider.zone1Distance <= 20;
+            let sleepingCondition = dataProvider.sleepScore >= 510;
 
             // Zone1 조건 확인 (Left Camera Warning)
             if (zone1Condition && !isLeftCameraDialogVisible && !isLeftCameraTimerRunning) {
@@ -68,6 +70,16 @@ Window {
 
                 // 5초 후 LeftCameraWarning 닫기 (Timer 시작)
                 leftCameraTimer.start();
+            }
+
+            if (sleepingCondition && !isSleepingDialogVisible) {
+                isSleepingDialogVisible = true;
+                warningDialog.showDialog();
+
+                // Dialog 닫힌 후 상태 초기화
+                warningDialog.closed.connect(() => {
+                    isSleepingDialogVisible = false;
+                });
             }
         }
     }
