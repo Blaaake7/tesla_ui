@@ -7,15 +7,9 @@
 #include <unistd.h>
 
 void initialize_shared_memory(SharedMemory **shared_memory) {
-    int shm_fd = shm_open("/shared_memory", O_CREAT | O_RDWR, 0666);
+    int shm_fd = shm_open("/shared_memory", O_RDWR, 0666);
     if (shm_fd == -1) {
         perror("shm_open failed");
-        exit(1);
-    }
-
-    if (ftruncate(shm_fd, sizeof(SharedMemory)) == -1) {
-        perror("ftruncate failed");
-        close(shm_fd);
         exit(1);
     }
 

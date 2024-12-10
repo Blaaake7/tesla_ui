@@ -73,30 +73,30 @@ Window {
     }
 
 
-    Column {
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.margins: 15
-        spacing: 10
+//    Column {
+//        anchors.left: parent.left
+//        anchors.top: parent.top
+//        anchors.margins: 15
+//        spacing: 10
 
-        Text {
-            text: "Zone 1 Distance: " + dataProvider.zone1Distance.toFixed(2) + " cm"
-            font.pointSize: 11
-        }
+//        Text {
+//            text: "Zone 1 Distance: " + dataProvider.zone1Distance.toFixed(2) + " cm"
+//            font.pointSize: 11
+//        }
 
-        Text {
-            text: "Zone 1 Temperature: " + dataProvider.zone1Temperature + " °C"
-            font.pointSize: 11
-        }
+//        Text {
+//            text: "Zone 1 Temperature: " + dataProvider.zone1Temperature + " °C"
+//            font.pointSize: 11
+//        }
 
-        Text {
-            text: "Zone 2 CO2 Level: " + dataProvider.zone2CO2 + " ppm"
-            font.pointSize: 11
-        }
+//        Text {
+//            text: "Zone 2 CO2 Level: " + dataProvider.zone2CO2 + " ppm"
+//            font.pointSize: 11
+//        }
 
-        Text {
-            text: "Zone 3 Distance: " + dataProvider.zone3Distance.toFixed(2) + " cm"
-            font.pointSize: 11
-        }
-    }
+//        Text {
+//            text: "Zone 3 Distance: " + dataProvider.zone3Distance.toFixed(2) + " cm"
+//            font.pointSize: 11
+//        }
+//    }
 }

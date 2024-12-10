@@ -11,18 +11,6 @@ Dialog {
     modal: true
     title: qsTr("Left Camera View")
 
-    // visible 상태를 관찰하여 다이얼로그 닫힘 처리
-    Connections {
-        target: leftCameraWarning
-        onVisibleChanged: {
-            if (!leftCameraWarning.visible) {
-                console.log("Left Camera Warning closed");
-                checkConditionsTimer.isLeftCameraDialogVisible = false;
-                checkConditionsTimer.isLeftCameraTimerRunning = false;
-            }
-        }
-    }
-
     ColumnLayout {
         anchors.fill: parent
         spacing: 10
@@ -70,5 +58,17 @@ Dialog {
         console.log("Opening camera connection...");
         leftVideoStreamer.openLeftCamera();
         leftImage.visible = true;
+    }
+
+    // 화면 중앙에 위치하도록 설정
+    onVisibleChanged: {
+        if (visible) {
+            x = (mainWindow.width - width) / 2;
+            y = (mainWindow.height - height) / 2;
+        } else {
+            console.log("Left Camera Warning closed");
+            checkConditionsTimer.isLeftCameraDialogVisible = false;
+            checkConditionsTimer.isLeftCameraTimerRunning = false;
+        }
     }
 }

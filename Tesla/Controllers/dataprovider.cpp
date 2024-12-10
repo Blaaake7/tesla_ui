@@ -24,7 +24,7 @@ DataProvider::DataProvider(QObject *parent)
 void DataProvider::updateData()
 {
     if (shared_memory != nullptr) {
-        pthread_mutex_lock(&shared_memory->mutex); // 뮤텍스 잠금
+        qDebug() << "Zone 1 Distance:" << m_zone1Distance;
 
         // 공유 메모리에서 값 읽기
         m_zone1Distance = shared_memory->zone1_recv.ultrasonic_distance;
@@ -33,8 +33,6 @@ void DataProvider::updateData()
         m_zone2CO2 = shared_memory->zone2_recv.co2;
         m_sleepScore = shared_memory->zone2_recv.sleep_score;
         m_doorStatus = shared_memory->zone1_recv.door_status;
-
-        pthread_mutex_unlock(&shared_memory->mutex); // 뮤텍스 잠금 해제
 
         // 값 변경 시 시그널 전송
         emit zone1DistanceChanged();

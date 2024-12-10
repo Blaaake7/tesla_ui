@@ -5,7 +5,7 @@
 #define WIDTH 640
 #define HEIGHT 480
 #define FRAME_SIZE (WIDTH * HEIGHT * 2)
-#define PORT 12345
+#define PORT 12346
 
 CameraReceiver::CameraReceiver(QObject *parent) : QObject(parent), m_socket(nullptr)
 {
