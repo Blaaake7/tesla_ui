@@ -1,12 +1,15 @@
 #include "videostreamer.h"
 #include <QDebug>
 
+// 생성자: QTimer를 설정하고 초기화
+// 카메라 스트리밍을 위한 타이머를 준비하고, 타이머의 timeout 시그널에 스트리밍 함수 연결
 VideoStreamer::VideoStreamer(QObject *parent)
     : QObject(parent), cap(), tUpdate(this)
 {
     connect(&tUpdate, &QTimer::timeout, this, &VideoStreamer::streamVideo);
 }
 
+// 소멸자: 카메라 장치를 해제하고 타이머를 중지
 VideoStreamer::~VideoStreamer()
 {
     if (cap.isOpened())
@@ -14,6 +17,7 @@ VideoStreamer::~VideoStreamer()
     tUpdate.stop();
 }
 
+// 주기적으로 호출되어 카메라에서 프레임을 캡처하고 이미지를 QImage로 변환
 void VideoStreamer::streamVideo()
 {
     if (cap.isOpened())
@@ -36,16 +40,19 @@ void VideoStreamer::streamVideo()
     }
 }
 
+// 왼쪽 카메라 장치 (/dev/video1) 열기
 void VideoStreamer::openLeftCamera()
 {
     openCamera("/dev/video1"); // 왼쪽 카메라 장치 경로
 }
 
+// 오른쪽 카메라 장치 (/dev/video3) 열기
 void VideoStreamer::openRightCamera()
 {
     openCamera("/dev/video3"); // 오른쪽 카메라 장치 경로
 }
 
+// 카메라, 비디오 경로 열기
 void VideoStreamer::openVideoCamera(QString path)
 {
     if (cap.isOpened())
@@ -61,7 +68,8 @@ void VideoStreamer::openVideoCamera(QString path)
     {
         cap.open(path.toStdString()); // 경로로 카메라 열기
     }
-
+    
+    // 카메라 성공적으로 열림
     if (cap.isOpened())
     {
         qDebug() << "Camera opened successfully.";
@@ -84,6 +92,7 @@ void VideoStreamer::openVideoCamera(QString path)
     }
 }
 
+// 카메라 장치를 닫고, 타이머 중지
 void VideoStreamer::closeCamera()
 {
     if (cap.isOpened())
@@ -92,6 +101,8 @@ void VideoStreamer::closeCamera()
     }
     tUpdate.stop(); // 타이머 중지
 }
+
+//카메라 장치를 열고, 타이머 시작
 void VideoStreamer::openCamera(const QString &devicePath)
 {
     if (cap.isOpened())
