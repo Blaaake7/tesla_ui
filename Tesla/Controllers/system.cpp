@@ -1,6 +1,6 @@
 #include "system.h"
 #include <QDateTime>
-
+//영진짱
 System::System(QObject *parent)
     : QObject{parent}
     , m_carLocked( true )
