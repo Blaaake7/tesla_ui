@@ -2,11 +2,12 @@
 #include <QDebug>
 #include <QBuffer>
 
-#define WIDTH 640
-#define HEIGHT 480
-#define FRAME_SIZE (WIDTH * HEIGHT * 2)
-#define PORT 12346
+#define WIDTH 640 //수신 영상 widht
+#define HEIGHT 480 // 수신 영상 height
+#define FRAME_SIZE (WIDTH * HEIGHT * 2) // 프레임 하나의 크기
+#define PORT 12346 // 서버 포트 번호
 
+// 서버 초기화 후 클라이언트 연결 대기
 CameraReceiver::CameraReceiver(QObject *parent) : QObject(parent), m_socket(nullptr)
 {
     if (!m_server.listen(QHostAddress::Any, PORT)) {
@@ -18,6 +19,7 @@ CameraReceiver::CameraReceiver(QObject *parent) : QObject(parent), m_socket(null
     connect(&m_server, &QTcpServer::newConnection, this, &CameraReceiver::onNewConnection);
 }
 
+// 클라이언트가 연결되면 QTcpSocket을 설정하고 관련 신호에 대한 연결을 설정
 void CameraReceiver::onNewConnection()
 {
     m_socket = m_server.nextPendingConnection();
@@ -27,6 +29,7 @@ void CameraReceiver::onNewConnection()
     connect(m_socket, &QTcpSocket::disconnected, this, &CameraReceiver::onDisconnected);
 }
 
+// 수신된 데이터를 프레임 버퍼에 추가하고 완전한 프레임을 처리
 void CameraReceiver::onReadyRead()
 {
     m_frameBuffer.append(m_socket->readAll());
@@ -39,6 +42,7 @@ void CameraReceiver::onReadyRead()
     }
 }
 
+// 소켓을 정리하고 프레임 버퍼를 초기화
 void CameraReceiver::onDisconnected()
 {
     qDebug() << "Client disconnected.";
@@ -47,6 +51,7 @@ void CameraReceiver::onDisconnected()
     m_frameBuffer.clear();
 }
 
+// 프레임 데이터를 처리하여 QImage로 변환
 void CameraReceiver::processFrame(const QByteArray& frameData)
 {
     QImage image(WIDTH, HEIGHT, QImage::Format_RGB888);
@@ -80,6 +85,7 @@ void CameraReceiver::processFrame(const QByteArray& frameData)
     emit imageUrlChanged();
 }
 
+// 이미지를 URL로 바꿈
 QUrl CameraReceiver::imageToUrl(const QImage& image)
 {
     QByteArray byteArray;
